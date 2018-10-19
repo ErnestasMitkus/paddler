@@ -29,6 +29,9 @@ public class Level extends ScreenAdapter {
         float topY = screenHeight - wallSize;
         for (float topX = 0f; topX < screenWidth; topX += wallSize) {
             walls.add(new Wall(topX, topY, wallSize, wallSize, atlas));
+
+            // bottom walls
+            walls.add(new Wall(topX, 0, wallSize, wallSize, atlas));
         }
 
         // left and right walls
@@ -37,5 +40,10 @@ public class Level extends ScreenAdapter {
             walls.add(new Wall(0, wallY, wallSize, wallSize, atlas));
             walls.add(new Wall(rightX, wallY, wallSize, wallSize, atlas));
         }
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
     }
 }
