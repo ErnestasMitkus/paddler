@@ -12,14 +12,11 @@ import java.util.concurrent.TimeUnit;
 public class PaddlerGame extends ApplicationAdapter {
     private TextureAtlas atlas;
     private Level level;
-    private Box2DLevel b2l;
 
     @Override
     public void create () {
         atlas = new TextureAtlas("BreakoutTileSetFree/SpriteSheet/Breakout_Tile_Free.atlas");
         level = new Level(atlas);
-        b2l = new Box2DLevel();
-        b2l.show();
 
         final FPSLogger fpsLogger = new FPSLogger();
         Executors.newSingleThreadScheduledExecutor()
@@ -31,14 +28,12 @@ public class PaddlerGame extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-//        level.render(Gdx.graphics.getDeltaTime());
-        b2l.render(Gdx.graphics.getDeltaTime());
+        level.render(Gdx.graphics.getDeltaTime());
     }
 
     @Override
     public void dispose () {
         atlas.dispose();
         level.dispose();
-        b2l.dispose();
     }
 }
