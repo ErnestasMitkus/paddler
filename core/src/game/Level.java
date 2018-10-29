@@ -9,11 +9,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import engine.box2d.spawner.BallSpawner;
 import engine.box2d.spawner.PlatformSpawner;
 import game.entities.Ball;
 import game.entities.GameWalls;
 import game.entities.Platform;
+import game.entities.SimpleBox2DEntity;
+import game.listeners.B2DContactListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static game.B2DVars.PPM_INV;
 import static game.B2DVars.PPM_MAT_INV;
@@ -29,9 +35,11 @@ public class Level extends ScreenAdapter {
     private SpriteBatch batch;
     private OrthographicCamera cam;
 
+    private B2DContactListener b2dContactListener;
+
     private GameWalls gameWalls;
     private Ball ball;
-    private Platform platform;
+    private List<Platform> platforms;
 
     public Level(TextureAtlas atlas) {
         float screenWidth = Gdx.graphics.getWidth();
@@ -41,6 +49,9 @@ public class Level extends ScreenAdapter {
 
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
+
+        b2dContactListener = new B2DContactListener();
+        world.setContactListener(b2dContactListener);
 
         batch = new SpriteBatch();
         cam = new OrthographicCamera(screenWidth, screenHeight);
@@ -53,10 +64,12 @@ public class Level extends ScreenAdapter {
         ball = new Ball(ballBody, atlas);
         ballBody.setLinearVelocity(20f, 10f);
 
+        platforms = new ArrayList<>();
+
         Vector2 platformPosition = new Vector2(screenWidth / 3, screenHeight / 2).mul(PPM_MAT_INV);
         Vector2 platformSize = new Vector2(384 >> 2, 128 >> 2);
         Body platformBody = PlatformSpawner.spawnPlatform(world, platformPosition, platformSize.cpy().mul(PPM_MAT_INV));
-        platform = new Platform(platformBody, platformSize, atlas);
+        platforms.add(new Platform(platformBody, platformSize, atlas));
     }
 
     @Override
@@ -67,6 +80,10 @@ public class Level extends ScreenAdapter {
 
     private void update(float delta) {
         world.step(delta, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+
+        // delete all platforms flagged for delete
+        sweepDeadBodies();
+
         ball.update(delta);
     }
 
@@ -74,10 +91,27 @@ public class Level extends ScreenAdapter {
         batch.begin();
         gameWalls.render(batch);
         ball.render(batch);
-        platform.render(batch);
+        platforms.forEach(it -> it.render(batch));
         batch.end();
 
         b2dr.render(world, cam.combined);
+    }
+
+    public void sweepDeadBodies() {
+        Array<Body> bodies = new Array<>(world.getBodyCount());
+        world.getBodies(bodies);
+        bodies.forEach(it -> {
+            if (it.getUserData() instanceof SimpleBox2DEntity) {
+                SimpleBox2DEntity entity = (SimpleBox2DEntity) it.getUserData();
+                if (entity.isFlaggedForDelete()) {
+                    world.destroyBody(it);
+                    it.setUserData(null);
+                    if (entity instanceof Platform) {
+                        platforms.remove(entity);
+                    }
+                }
+            }
+        });
     }
 
     @Override

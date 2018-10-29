@@ -18,6 +18,8 @@ public class SimpleBox2DEntity {
     protected Sprite sprite;
     protected Body box2DBody;
 
+    protected boolean isFlaggedForDelete;
+
     public SimpleBox2DEntity(Body box2DBody, SpriteRegistry spriteRegistry, TextureAtlas atlas) {
         sprite = spriteRegistry.createSprite(atlas);
         setBox2DBody(box2DBody);
@@ -80,6 +82,10 @@ public class SimpleBox2DEntity {
     private void setBox2DBody(Body ballBody) {
         this.box2DBody = ballBody;
         update(0f);
+    }
+
+    public boolean isFlaggedForDelete() {
+        return isFlaggedForDelete;
     }
 
     private CircleShape getCircleShape() {

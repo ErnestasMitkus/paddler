@@ -11,4 +11,8 @@ public class Platform extends SimpleBox2DEntity {
         super(box2DBody, SpriteRegistry.GREEN_TILE, atlas);
         sprite.setScale(size.x / sprite.getWidth(), size.y / sprite.getHeight());
     }
+
+    public void hit(Ball ball) {
+        isFlaggedForDelete = true;
+    }
 }
