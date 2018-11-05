@@ -54,8 +54,8 @@ public class SimpleBox2DEntity {
 
     public Vector2 getPosition() {
         return new Vector2(
-            sprite.getX() + sprite.getOriginX(),
-            sprite.getY() + sprite.getOriginY());
+                sprite.getX() + sprite.getOriginX(),
+                sprite.getY() + sprite.getOriginY());
     }
 
     private void setSpritePosition(Vector2 pos) {
@@ -91,5 +91,4 @@ public class SimpleBox2DEntity {
     private CircleShape getCircleShape() {
         return ShapeUtils.getShape(box2DBody, CircleShape.class);
     }
-
 }
