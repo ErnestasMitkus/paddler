@@ -4,7 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import game.registry.SpriteRegistry;
 
 import java.util.ArrayList;
@@ -15,16 +19,16 @@ import static game.B2DVars.PPM_MAT_INV;
 
 public class Paddle extends SimpleBox2DEntity {
     private static final float DEFAULT_PADDLE_SPPEED = 0.1f;
+    private static final SpriteRegistry DEFAULT_SPRITE_REGISTRY = SpriteRegistry.PADDLE_ELECTRIC_1;
 
     private float paddleSpeed = DEFAULT_PADDLE_SPPEED;
-    private SpriteRegistry spriteRegistry = SpriteRegistry.PADDLE_ELECTRIC_1;
     private List<Effects> currentEffects = new ArrayList<>();
 
     public Paddle(World world, TextureAtlas atlas) {
-        sprite = spriteRegistry.createSprite(atlas);
-        Vector2 posVector = new Vector2(Gdx.graphics.getWidth() / 2f, spriteRegistry.getSizeY() / 2f).mul(PPM_MAT_INV);
+        sprite = DEFAULT_SPRITE_REGISTRY.createSprite(atlas);
+        Vector2 posVector = new Vector2(Gdx.graphics.getWidth() / 2f, DEFAULT_SPRITE_REGISTRY.getSizeY() / 2f).mul(PPM_MAT_INV);
 
-        box2DBody = generateBody(world, posVector, spriteRegistry.getSizeX() / PPM / 2, spriteRegistry.getSizeY() / PPM / 2);
+        box2DBody = generateBody(world, posVector, DEFAULT_SPRITE_REGISTRY.getSizeX() / PPM / 2, DEFAULT_SPRITE_REGISTRY.getSizeY() / PPM / 2);
         box2DBody.setUserData(this);
     }
 

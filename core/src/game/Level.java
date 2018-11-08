@@ -12,8 +12,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import engine.box2d.spawner.BallSpawner;
 import engine.box2d.utils.GameHud;
-import game.entities.*;
+import game.entities.Ball;
+import game.entities.GameWalls;
+import game.entities.Paddle;
 import game.entities.Paddle.Effects;
+import game.entities.Platform;
+import game.entities.SimpleBox2DEntity;
 import game.listeners.B2DContactListener;
 import game.registry.BricksGenerator;
 
