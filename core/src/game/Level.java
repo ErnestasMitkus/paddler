@@ -11,13 +11,12 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import engine.box2d.spawner.BallSpawner;
-import engine.box2d.spawner.PlatformSpawner;
 import game.entities.Ball;
 import game.entities.GameWalls;
 import game.entities.Platform;
 import game.entities.SimpleBox2DEntity;
 import game.listeners.B2DContactListener;
-import game.registry.SpriteRegistry;
+import game.registry.BricksGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +26,8 @@ import static game.B2DVars.PPM_MAT_INV;
 
 public class Level extends ScreenAdapter {
 
-    private static final int VELOCITY_ITERATIONS = 10;
-    private static final int POSITION_ITERATIONS = 6;
+    private static final int VELOCITY_ITERATIONS = 50;
+    private static final int POSITION_ITERATIONS = 30;
 
     private World world;
     private Box2DDebugRenderer b2dr;
@@ -60,17 +59,14 @@ public class Level extends ScreenAdapter {
 
         gameWalls = new GameWalls(screenWidth, screenHeight, wallSize, atlas, world);
 
-        Vector2 ballPosition = new Vector2(screenWidth / 2, screenHeight / 2).mul(PPM_MAT_INV);
+        Vector2 ballPosition = new Vector2(screenWidth / 2, screenHeight / 4).mul(PPM_MAT_INV);
         Body ballBody = BallSpawner.spawnBall(ballPosition, ballSize * PPM_INV, world);
         ball = new Ball(ballBody, atlas);
         ballBody.setLinearVelocity(20f, 10f);
 
         platforms = new ArrayList<>();
-
-        Vector2 platformPosition = new Vector2(screenWidth / 3, screenHeight / 2).mul(PPM_MAT_INV);
-        Vector2 platformSize = new Vector2(384 >> 2, 128 >> 2);
-        Body platformBody = PlatformSpawner.spawnPlatform(world, platformPosition, platformSize.cpy().mul(PPM_MAT_INV));
-        platforms.add(new Platform(platformBody, platformSize, atlas, SpriteRegistry.GREEN_TILE, SpriteRegistry.GREEN_TILE_DAMAGED));
+        platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 10, 200, 600));
+        System.out.println();
     }
 
     @Override
