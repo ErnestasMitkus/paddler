@@ -14,6 +14,8 @@ import engine.box2d.spawner.BallSpawner;
 import engine.box2d.utils.GameHud;
 import game.entities.Ball;
 import game.entities.GameWalls;
+import game.entities.Paddle;
+import game.entities.Paddle.Effects;
 import game.entities.Platform;
 import game.entities.SimpleBox2DEntity;
 import game.listeners.B2DContactListener;
@@ -29,7 +31,7 @@ public class Level extends ScreenAdapter {
 
     private static final int VELOCITY_ITERATIONS = 50;
     private static final int POSITION_ITERATIONS = 30;
-
+    private final Paddle paddle;
     //shouldn't be static. oh well
     public static int lives = 5;
     public static int score = 0;
@@ -72,6 +74,9 @@ public class Level extends ScreenAdapter {
         ball = new Ball(ballBody, atlas);
         ballBody.setLinearVelocity(20f, 10f);
 
+        paddle = new Paddle(world, atlas);
+        paddle.addEffect(Effects.Speed);
+
         platforms = new ArrayList<>();
         platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 10, 200, 600));
         System.out.println();
@@ -96,9 +101,8 @@ public class Level extends ScreenAdapter {
 
         // delete all platforms flagged for delete
         sweepDeadBodies();
-
         ball.update(delta);
-
+        paddle.update(delta);
         gameWalls.update(delta);
         hud.update(delta);
     }
@@ -108,6 +112,7 @@ public class Level extends ScreenAdapter {
         batch.begin();
         gameWalls.render(batch);
         ball.render(batch);
+        paddle.render(batch);
         platforms.forEach(it -> it.render(batch));
         batch.end();
 
