@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import engine.box2d.spawner.BallSpawner;
+import engine.box2d.utils.GameHud;
 import game.entities.Ball;
 import game.entities.GameWalls;
 import game.entities.Platform;
@@ -29,6 +30,10 @@ public class Level extends ScreenAdapter {
     private static final int VELOCITY_ITERATIONS = 50;
     private static final int POSITION_ITERATIONS = 30;
 
+    //shouldn't be static. oh well
+    public static int lives = 5;
+    public static int score = 0;
+
     private World world;
     private Box2DDebugRenderer b2dr;
 
@@ -40,6 +45,9 @@ public class Level extends ScreenAdapter {
     private GameWalls gameWalls;
     private Ball ball;
     private List<Platform> platforms;
+
+    //game HUD
+    GameHud hud;
 
     public Level(TextureAtlas atlas) {
         float screenWidth = Gdx.graphics.getWidth();
@@ -67,6 +75,14 @@ public class Level extends ScreenAdapter {
         platforms = new ArrayList<>();
         platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 10, 200, 600));
         System.out.println();
+
+        hud = new GameHud(this, atlas);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        hud.resize(width, height);
     }
 
     @Override
@@ -82,9 +98,13 @@ public class Level extends ScreenAdapter {
         sweepDeadBodies();
 
         ball.update(delta);
+
+        gameWalls.update(delta);
+        hud.update(delta);
     }
 
     private void render(SpriteBatch batch) {
+        //batch.setProjectionMatrix(cam.combined);
         batch.begin();
         gameWalls.render(batch);
         ball.render(batch);
@@ -92,6 +112,11 @@ public class Level extends ScreenAdapter {
         batch.end();
 
         b2dr.render(world, cam.combined);
+        hud.addMsg("FPS: "+Gdx.graphics.getFramesPerSecond());
+        hud.addMsg("Lives: "+lives);
+        hud.addMsg("Score: "+score);
+        hud.addMsg("Bodies: "+world.getBodyCount());
+        hud.draw();
     }
 
     public void sweepDeadBodies() {
@@ -109,6 +134,10 @@ public class Level extends ScreenAdapter {
                 }
             }
         });
+    }
+
+    public SpriteBatch getBatch() {
+        return batch;
     }
 
     @Override

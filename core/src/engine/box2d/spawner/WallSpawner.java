@@ -27,6 +27,7 @@ public class WallSpawner {
             edgeShape.set(points[i - 1], points[i]);
             walls.createFixture(fdef);
         }
+        edgeShape.dispose();
         return walls;
     }
 
