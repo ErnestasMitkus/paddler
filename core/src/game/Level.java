@@ -17,6 +17,7 @@ import game.entities.GameWalls;
 import game.entities.Platform;
 import game.entities.SimpleBox2DEntity;
 import game.listeners.B2DContactListener;
+import game.registry.SpriteRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class Level extends ScreenAdapter {
         Vector2 platformPosition = new Vector2(screenWidth / 3, screenHeight / 2).mul(PPM_MAT_INV);
         Vector2 platformSize = new Vector2(384 >> 2, 128 >> 2);
         Body platformBody = PlatformSpawner.spawnPlatform(world, platformPosition, platformSize.cpy().mul(PPM_MAT_INV));
-        platforms.add(new Platform(platformBody, platformSize, atlas));
+        platforms.add(new Platform(platformBody, platformSize, atlas, SpriteRegistry.GREEN_TILE, SpriteRegistry.GREEN_TILE_DAMAGED));
     }
 
     @Override

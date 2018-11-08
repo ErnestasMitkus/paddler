@@ -91,5 +91,4 @@ public class SimpleBox2DEntity {
     private CircleShape getCircleShape() {
         return ShapeUtils.getShape(box2DBody, CircleShape.class);
     }
-
 }
