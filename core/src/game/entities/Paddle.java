@@ -4,17 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import engine.box2d.spawner.PlatformSpawner;
 import game.registry.SpriteRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static game.B2DVars.PPM;
 import static game.B2DVars.PPM_MAT_INV;
 
 public class Paddle extends SimpleBox2DEntity {
@@ -25,11 +21,10 @@ public class Paddle extends SimpleBox2DEntity {
     private List<Effects> currentEffects = new ArrayList<>();
 
     public Paddle(World world, TextureAtlas atlas) {
-        sprite = DEFAULT_SPRITE_REGISTRY.createSprite(atlas);
-        Vector2 posVector = new Vector2(Gdx.graphics.getWidth() / 2f, DEFAULT_SPRITE_REGISTRY.getSizeY() / 2f).mul(PPM_MAT_INV);
-
-        box2DBody = generateBody(world, posVector, DEFAULT_SPRITE_REGISTRY.getSizeX() / PPM / 2, DEFAULT_SPRITE_REGISTRY.getSizeY() / PPM / 2);
-        box2DBody.setUserData(this);
+        super(PlatformSpawner.spawnPlatform(world,
+            new Vector2(Gdx.graphics.getWidth() / 2f, DEFAULT_SPRITE_REGISTRY.getSizeY() / 2f).mul(PPM_MAT_INV),
+            new Vector2(DEFAULT_SPRITE_REGISTRY.getSizeX(), DEFAULT_SPRITE_REGISTRY.getSizeY()).mul(PPM_MAT_INV)),
+            DEFAULT_SPRITE_REGISTRY, atlas);
     }
 
     public void addEffect(Effects effect) {
@@ -53,25 +48,6 @@ public class Paddle extends SimpleBox2DEntity {
 
     public List<Effects> getEffects() {
         return this.currentEffects;
-    }
-
-
-    private Body generateBody(World world, Vector2 vector, float width, float height) {
-
-        BodyDef bdef = new BodyDef();
-        bdef.type = BodyDef.BodyType.StaticBody;
-        bdef.position.set(vector.x, vector.y);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width, height);
-
-        FixtureDef fdef = new FixtureDef();
-        fdef.shape = shape;
-
-        Body body = world.createBody(bdef);
-        body.createFixture(fdef);
-        body.setBullet(true);
-        return body;
     }
 
     @Override
