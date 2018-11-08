@@ -22,26 +22,21 @@ public class GameWalls {
 
     private List<Wall> walls = new ArrayList<>();
 
-    //bottom wall
-    Body b2dBottomWall;
+    private Body b2dBottomWall;
 
     public GameWalls(float screenWidth, float screenHeight, float wallSize, TextureAtlas atlas, World world) {
         generateWalls(screenWidth, screenHeight, wallSize, atlas);
         //generateBox2DWalls(screenWidth, screenHeight, wallSize, world);
-        generateBox2SWalls2(screenWidth*PPM_INV, screenHeight*PPM_INV, wallSize*PPM_INV, world);
+        generateBox2SWalls2(screenWidth * PPM_INV, screenHeight * PPM_INV, wallSize * PPM_INV, world);
     }
 
     public void render(SpriteBatch batch) {
         walls.forEach(it -> it.render(batch));
     }
 
-    public void update(float delta){
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            if (b2dBottomWall.isActive()){
-                b2dBottomWall.setActive(false);
-            }else{
-                b2dBottomWall.setActive(true);
-            }
+    public void update(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            b2dBottomWall.setActive(!b2dBottomWall.isActive());
         }
     }
 
@@ -52,7 +47,7 @@ public class GameWalls {
             walls.add(new Wall(topX, topY, wallSize, wallSize, atlas));
 
             // bottom walls
-           // walls.add(new Wall(topX, 0, wallSize, wallSize, atlas));
+            // walls.add(new Wall(topX, 0, wallSize, wallSize, atlas));
         }
 
         // left and right walls
@@ -73,13 +68,12 @@ public class GameWalls {
         );
     }
 
-    private void generateBox2SWalls2(float worldWidth, float worldHeight, float padding, World world){
+    private void generateBox2SWalls2(float worldWidth, float worldHeight, float padding, World world) {
+        Array<Vector2> points = new Array<>();
 
-        System.out.println("world_width: "+worldWidth+"  world_height: "+worldHeight+"  padding: "+padding);
-        Array<Vector2> points = new Array<Vector2>();
-        points.add(new Vector2(padding,padding));
-        points.add(new Vector2((worldWidth - padding) , padding ));
-        points.add(new Vector2((worldWidth - padding), (worldHeight - padding) ));
+        points.add(new Vector2(padding, padding));
+        points.add(new Vector2((worldWidth - padding), padding));
+        points.add(new Vector2((worldWidth - padding), (worldHeight - padding)));
         points.add(new Vector2(padding, (worldHeight - padding)));
         points.add(new Vector2(padding, padding));
 
