@@ -20,7 +20,11 @@ public class SimpleBox2DEntity {
 
     protected boolean isFlaggedForDelete;
 
+    public SimpleBox2DEntity() {
+    }
+
     public SimpleBox2DEntity(Body box2DBody, SpriteRegistry spriteRegistry, TextureAtlas atlas) {
+        super();
         sprite = spriteRegistry.createSprite(atlas);
         setBox2DBody(box2DBody);
         box2DBody.setUserData(this);
@@ -54,8 +58,8 @@ public class SimpleBox2DEntity {
 
     public Vector2 getPosition() {
         return new Vector2(
-            sprite.getX() + sprite.getOriginX(),
-            sprite.getY() + sprite.getOriginY());
+                sprite.getX() + sprite.getOriginX(),
+                sprite.getY() + sprite.getOriginY());
     }
 
     private void setSpritePosition(Vector2 pos) {
@@ -79,7 +83,7 @@ public class SimpleBox2DEntity {
         return box2DBody;
     }
 
-    private void setBox2DBody(Body ballBody) {
+    protected void setBox2DBody(Body ballBody) {
         this.box2DBody = ballBody;
         update(0f);
     }
