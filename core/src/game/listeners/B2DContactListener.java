@@ -1,6 +1,5 @@
 package game.listeners;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -10,7 +9,6 @@ import game.entities.Ball;
 import game.entities.Platform;
 
 public class B2DContactListener implements ContactListener {
-    private TextureAtlas atlas;
 
     @Override
     public void beginContact(Contact contact) {
@@ -22,7 +20,7 @@ public class B2DContactListener implements ContactListener {
             Platform platform = CastUtils.findFirstOfClass(Platform.class, userDataA, userDataB);
 
             if (ball != null && platform != null) {
-                platform.hit(ball, this.atlas);
+                platform.hit(ball);
             }
         }
     }
@@ -40,9 +38,5 @@ public class B2DContactListener implements ContactListener {
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
 
-    }
-
-    public void setAtlas(TextureAtlas atlas) {
-        this.atlas = atlas;
     }
 }

@@ -62,6 +62,10 @@ public enum SpriteRegistry {
         return atlas.createSprite(spriteName);
     }
 
+    public TextureAtlas.AtlasRegion findRegion(TextureAtlas atlas) {
+        return atlas.findRegion(spriteName);
+    }
+
     public int getSizeX() {
         return sizeX;
     }

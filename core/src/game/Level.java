@@ -52,7 +52,6 @@ public class Level extends ScreenAdapter {
         b2dr = new Box2DDebugRenderer();
 
         b2dContactListener = new B2DContactListener();
-        b2dContactListener.setAtlas(atlas);
         world.setContactListener(b2dContactListener);
 
         batch = new SpriteBatch();
