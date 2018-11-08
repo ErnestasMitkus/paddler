@@ -26,8 +26,8 @@ import static game.B2DVars.PPM_MAT_INV;
 
 public class Level extends ScreenAdapter {
 
-    private static final int VELOCITY_ITERATIONS = 10;
-    private static final int POSITION_ITERATIONS = 6;
+    private static final int VELOCITY_ITERATIONS = 50;
+    private static final int POSITION_ITERATIONS = 30;
 
     private World world;
     private Box2DDebugRenderer b2dr;
@@ -59,14 +59,14 @@ public class Level extends ScreenAdapter {
 
         gameWalls = new GameWalls(screenWidth, screenHeight, wallSize, atlas, world);
 
-        Vector2 ballPosition = new Vector2(screenWidth / 2, screenHeight / 2).mul(PPM_MAT_INV);
+        Vector2 ballPosition = new Vector2(screenWidth / 2, screenHeight / 4).mul(PPM_MAT_INV);
         Body ballBody = BallSpawner.spawnBall(ballPosition, ballSize * PPM_INV, world);
         ball = new Ball(ballBody, atlas);
         ballBody.setLinearVelocity(20f, 10f);
 
-        platforms = new BricksGenerator().generateBricksList(world, atlas, 3, 10, 200, 600);
-
-        platforms.addAll(new BricksGenerator().generateBricksList(world, atlas, 3, 10, 200, 300));
+        platforms = new ArrayList<>();
+        platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 10, 200, 600));
+        System.out.println();
     }
 
     @Override
