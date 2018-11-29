@@ -85,6 +85,10 @@ public class SimpleBox2DEntity {
         update(0f);
     }
 
+    public void delete() {
+        isFlaggedForDelete = true;
+    }
+
     public boolean isFlaggedForDelete() {
         return isFlaggedForDelete;
     }

@@ -31,17 +31,19 @@ public class Paddle extends SimpleBox2DEntity {
 
     @Override
     public void update(float delta) {
-        super.update(delta);
         boolean isLeftPressed = Gdx.input.isKeyPressed(Keys.LEFT);
         boolean isRightPressed = Gdx.input.isKeyPressed(Keys.RIGHT);
         Vector2 bodyPos = box2DBody.getPosition();
 
-        if (isRightPressed && sprite.getX() + sprite.getWidth() < Gdx.graphics.getWidth())
+        if (isRightPressed && sprite.getX() + sprite.getWidth() < Gdx.graphics.getWidth()) {
             bodyPos.x += this.paddleSpeed;
-        if (isLeftPressed && sprite.getX() > 0)
+        }
+        if (isLeftPressed && sprite.getX() > 0) {
             bodyPos.x -= this.paddleSpeed;
+        }
 
         box2DBody.setTransform(bodyPos, 0);
+        super.update(delta);
     }
 
     public enum Effects {

@@ -35,7 +35,7 @@ public class GameWalls {
     }
 
     public void update(float delta) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             b2dBottomWall.setActive(!b2dBottomWall.isActive());
         }
     }

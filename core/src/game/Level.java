@@ -1,6 +1,7 @@
 package game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,6 +32,8 @@ public class Level extends ScreenAdapter {
 
     private static final int VELOCITY_ITERATIONS = 50;
     private static final int POSITION_ITERATIONS = 30;
+    private static final Vector2 OFFSET_BALL_PADDLE = new Vector2(0, 35).mul(PPM_MAT_INV);
+    private static final Vector2 INITIAL_BALL_VELOCITY = new Vector2(0, 4f);
     private final Paddle paddle;
     //shouldn't be static. oh well
     public static int lives = 5;
@@ -38,6 +41,7 @@ public class Level extends ScreenAdapter {
 
     private World world;
     private Box2DDebugRenderer b2dr;
+    private TextureAtlas atlas;
 
     private SpriteBatch batch;
     private OrthographicCamera cam;
@@ -51,14 +55,17 @@ public class Level extends ScreenAdapter {
     //game HUD
     GameHud hud;
 
+    private final float ballSize = 12f;
+    private boolean ballAttached; // don't check ball collision while attached
+
     public Level(TextureAtlas atlas) {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
         float wallSize = screenWidth / 50f;
-        float ballSize = 12f;
 
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
+        this.atlas = atlas;
 
         b2dContactListener = new B2DContactListener();
         world.setContactListener(b2dContactListener);
@@ -69,11 +76,6 @@ public class Level extends ScreenAdapter {
 
         gameWalls = new GameWalls(screenWidth, screenHeight, wallSize, atlas, world);
 
-        Vector2 ballPosition = new Vector2(screenWidth / 2, screenHeight / 4).mul(PPM_MAT_INV);
-        Body ballBody = BallSpawner.spawnBall(ballPosition, ballSize * PPM_INV, world);
-        ball = new Ball(ballBody, atlas);
-        ballBody.setLinearVelocity(8f, 4f);
-
         paddle = new Paddle(world, atlas);
         paddle.addEffect(Effects.Speed);
 
@@ -81,6 +83,8 @@ public class Level extends ScreenAdapter {
         platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 12, 200, 600));
 
         hud = new GameHud(this, atlas);
+
+        spawnBall();
     }
 
     @Override
@@ -97,6 +101,14 @@ public class Level extends ScreenAdapter {
 
     private void update(float delta) {
         world.step(delta, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+
+        removeOutOfBoundsBalls();
+        if (ball == null) {
+            spawnBall();
+        }
+        if (ballAttached) {
+            updateAttachedBall();
+        }
 
         // delete all platforms flagged for delete
         sweepDeadBodies();
@@ -123,6 +135,23 @@ public class Level extends ScreenAdapter {
         hud.draw();
     }
 
+    private void updateAttachedBall() {
+        ball.getBox2DBody().setTransform(paddle.getBox2DBody().getPosition().add(OFFSET_BALL_PADDLE), ball.getBox2DBody().getAngle());
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            ballAttached = false;
+            ball.getBox2DBody().setLinearVelocity(INITIAL_BALL_VELOCITY);
+        }
+    }
+
+    private void removeOutOfBoundsBalls() {
+        if (ball.getBox2DBody().getPosition().y < 0) {
+            ball.delete();
+            ball = null;
+            Level.lives -= 1;
+        }
+    }
+
     public void sweepDeadBodies() {
         Array<Body> bodies = new Array<>(world.getBodyCount());
         world.getBodies(bodies);
@@ -138,6 +167,16 @@ public class Level extends ScreenAdapter {
                 }
             }
         });
+    }
+
+    private void spawnBall() {
+        ballAttached = true;
+
+        Vector2 ballPosition = paddle.getPosition();
+        Body ballBody = BallSpawner.spawnBall(ballPosition, ballSize * PPM_INV, world);
+        ball = new Ball(ballBody, atlas);
+//        ballBody.setLinearVelocity(8f, 4f);
+
     }
 
     public SpriteBatch getBatch() {
