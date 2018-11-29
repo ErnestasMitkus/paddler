@@ -1,2 +1,4 @@
-Paddle acceleration with keyboard
-Ball speed regarding collision point on paddle
+Vytautas - Paddle acceleration with keyboard
+Benas - Ball vector angle / speed regarding collision point on paddle
+Povilas - fix bounds, particles when wall is broken
+Gytis - come to meet on time (or at all), read about collision masks and implement collision masks. (eg, in future we will have more than 1 ball on screen. We don't want them to collide to each other)

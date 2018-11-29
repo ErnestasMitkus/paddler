@@ -126,6 +126,14 @@ public class Level extends ScreenAdapter {
 
     private void updateInputs(float delta) {
         // Update paddle
+
+        // acceleration:
+        // track acc vector per updates
+        // input adds/subtracts from acc vector
+        // bound it to a max speed
+        // if no input, multiply acc vector by slowdown percentage
+        // if Math.abs(acc vector) is lower than some value and input not pressed -> acc vector = 0
+
         Vector2 bodyPos = paddle.getBox2DBody().getPosition();
         float paddleMovSpeed = 10f;
 
