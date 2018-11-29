@@ -19,7 +19,7 @@ public class BricksGenerator {
     public static List<Platform> generateBricksList(World world, TextureAtlas atlas, float rows, float columns, float positionX, float positionY) {
         float posX = positionX * PPM_INV;
         float posY = positionY * PPM_INV;
-        Vector2 platformSize = new Vector2(SpriteRegistry.BLUE_TILE.getSizeX() / 4f, SpriteRegistry.BLUE_TILE.getSizeY() / 4f).mul(PPM_MAT_INV);
+        Vector2 platformSize = new Vector2(SpriteRegistry.BLUE_TILE.getSizeX() / 5f, SpriteRegistry.BLUE_TILE.getSizeY() / 5f).mul(PPM_MAT_INV);
         List<Platform> bricksList = new ArrayList<>();
 
         for(float i = 0; i < columns * platformSize.x; i += platformSize.x) {

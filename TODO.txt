@@ -1,0 +1,2 @@
+Paddle acceleration with keyboard
+Ball speed regarding collision point on paddle

@@ -55,7 +55,7 @@ public class Level extends ScreenAdapter {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
         float wallSize = screenWidth / 50f;
-        float ballSize = 16f;
+        float ballSize = 12f;
 
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
@@ -72,14 +72,13 @@ public class Level extends ScreenAdapter {
         Vector2 ballPosition = new Vector2(screenWidth / 2, screenHeight / 4).mul(PPM_MAT_INV);
         Body ballBody = BallSpawner.spawnBall(ballPosition, ballSize * PPM_INV, world);
         ball = new Ball(ballBody, atlas);
-        ballBody.setLinearVelocity(20f, 10f);
+        ballBody.setLinearVelocity(8f, 4f);
 
         paddle = new Paddle(world, atlas);
         paddle.addEffect(Effects.Speed);
 
         platforms = new ArrayList<>();
-        platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 10, 200, 600));
-        System.out.println();
+        platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 12, 200, 600));
 
         hud = new GameHud(this, atlas);
     }
