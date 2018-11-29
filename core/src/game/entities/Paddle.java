@@ -29,23 +29,6 @@ public class Paddle extends SimpleBox2DEntity {
         effect.apply(this);
     }
 
-    @Override
-    public void update(float delta) {
-        boolean isLeftPressed = Gdx.input.isKeyPressed(Keys.LEFT);
-        boolean isRightPressed = Gdx.input.isKeyPressed(Keys.RIGHT);
-        Vector2 bodyPos = box2DBody.getPosition();
-
-        if (isRightPressed && sprite.getX() + sprite.getWidth() < Gdx.graphics.getWidth()) {
-            bodyPos.x += this.paddleSpeed;
-        }
-        if (isLeftPressed && sprite.getX() > 0) {
-            bodyPos.x -= this.paddleSpeed;
-        }
-
-        box2DBody.setTransform(bodyPos, 0);
-        super.update(delta);
-    }
-
     public enum Effects {
         Speed(p -> p.paddleSpeed += DEFAULT_PADDLE_SPPEED),
         Slowness(p -> p.paddleSpeed -= DEFAULT_PADDLE_SPPEED),

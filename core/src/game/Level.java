@@ -100,6 +100,10 @@ public class Level extends ScreenAdapter {
     }
 
     private void update(float delta) {
+        // keyboard inputs
+        updateInputs(delta);
+
+        // game logic
         world.step(delta, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
         removeOutOfBoundsBalls();
@@ -112,10 +116,26 @@ public class Level extends ScreenAdapter {
 
         // delete all platforms flagged for delete
         sweepDeadBodies();
+
+        // sync box2d with sprites
         ball.update(delta);
         paddle.update(delta);
         gameWalls.update(delta);
         hud.update(delta);
+    }
+
+    private void updateInputs(float delta) {
+        // Update paddle
+        Vector2 bodyPos = paddle.getBox2DBody().getPosition();
+        float paddleMovSpeed = 10f;
+
+        int vecX = 0;
+        vecX += Gdx.input.isKeyPressed(Input.Keys.LEFT) ? -1 : 0;
+        vecX += Gdx.input.isKeyPressed(Input.Keys.RIGHT) ? 1 : 0;
+
+        if (vecX != 0) {
+            paddle.getBox2DBody().setTransform(bodyPos.add(vecX * delta * paddleMovSpeed, 0), paddle.getBox2DBody().getAngle());
+        }
     }
 
     private void render(SpriteBatch batch) {
@@ -175,7 +195,6 @@ public class Level extends ScreenAdapter {
         Vector2 ballPosition = paddle.getPosition();
         Body ballBody = BallSpawner.spawnBall(ballPosition, ballSize * PPM_INV, world);
         ball = new Ball(ballBody, atlas);
-//        ballBody.setLinearVelocity(8f, 4f);
 
     }
 
