@@ -2,3 +2,9 @@ Vytautas - Paddle acceleration with keyboard
 Benas - Ball vector angle / speed regarding collision point on paddle
 Povilas - fix bounds, particles when wall is broken
 Gytis - come to meet on time (or at all), read about collision masks and implement collision masks. (eg, in future we will have more than 1 ball on screen. We don't want them to collide to each other)
+
+??? - Implement droping and catching power ups (READ about collision masking). Power up should not collide with anything and should trigger a collision trigger with the paddle.
+Povilas - Fix cameras and stuck ball
+Vytautas - Bounce the baddle on wall hit
+??? - Create more levelz
+
