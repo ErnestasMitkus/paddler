@@ -17,12 +17,21 @@ public class Paddle extends SimpleBox2DEntity {
 
     private float paddleSpeed = DEFAULT_PADDLE_SPPEED;
 
+    private float changeX;
+    private float changeY;
+    private Vector2 previousPos = new Vector2();
+    private Vector2 currentPos = new Vector2();
+
     public Paddle(World world, TextureAtlas atlas) {
         super(PlatformSpawner.spawnPlatform(world,
             new Vector2(Gdx.graphics.getWidth() / 2f, DEFAULT_SPRITE_REGISTRY.getSizeY() / 2f).mul(PPM_MAT_INV),
             new Vector2(DEFAULT_SPRITE_REGISTRY.getSizeX() * SCALE, DEFAULT_SPRITE_REGISTRY.getSizeY() * SCALE).mul(PPM_MAT_INV)),
             DEFAULT_SPRITE_REGISTRY, atlas);
         sprite.setScale(SCALE, SCALE);
+        changeX = 0;
+        changeY = 0;
+        previousPos.set(this.box2DBody.getPosition());
+        currentPos.set(this.box2DBody.getPosition());
     }
 
     public void addEffect(Effects effect) {
@@ -51,5 +60,34 @@ public class Paddle extends SimpleBox2DEntity {
 
     interface EffectDef {
         void apply(Paddle paddle);
+    }
+
+    @Override
+    public void update(float delta){
+        super.update(delta);
+
+        if (currentPos != null && previousPos != null) {
+            currentPos.set(box2DBody.getPosition());
+            changeX = currentPos.x - previousPos.x;
+            changeY = currentPos.y - previousPos.y;
+            previousPos.set(currentPos.x, currentPos.y);
+        }
+
+    }
+
+    public float getChangeX() {
+        return changeX;
+    }
+
+    public void setChangeX(float changeX) {
+        this.changeX = changeX;
+    }
+
+    public float getChangeY() {
+        return changeY;
+    }
+
+    public void setChangeY(float changeY) {
+        this.changeY = changeY;
     }
 }

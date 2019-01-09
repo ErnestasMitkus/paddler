@@ -160,6 +160,18 @@ public class Level extends ScreenAdapter {
         hud.addMsg("Lives: "+lives);
         hud.addMsg("Score: "+score);
         hud.addMsg("Bodies: "+world.getBodyCount());
+
+        hud.addMsg("Ball position: x = "+ball.getBox2DBody().getPosition().x+"  y = "+ball.getBox2DBody().getPosition().y);
+        hud.addMsg("Paddle position: x = "+paddle.getBox2DBody().getPosition().x+"   y = "+paddle.getBox2DBody().getPosition().y);
+        hud.addMsg("Ball angle: "+ball.getBox2DBody().getAngle());
+        hud.addMsg("Ball linear velocity: ["+ball.getBox2DBody().getLinearVelocity().x+", "+ball.getBox2DBody().getLinearVelocity().y+"]");
+        float angle = (float) Math.atan2((double) ball.getBox2DBody().getLinearVelocity().y, (double) ball.getBox2DBody().getLinearVelocity().x);
+        hud.addMsg("Ball velocity angle: "+angle);
+        hud.addMsg("Ball angle degrees: "+Math.toDegrees(angle));
+        hud.addMsg("Paddle changeX: "+paddle.getChangeX());
+        hud.addMsg("Paddle changeY: "+paddle.getChangeY());
+
+
         hud.draw();
     }
 

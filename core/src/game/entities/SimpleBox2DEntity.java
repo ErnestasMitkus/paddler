@@ -37,6 +37,11 @@ public class SimpleBox2DEntity {
 
             // angle
             setSpriteRotation(box2DBody.getAngle());
+
+            //body angle
+            float angle = (float) Math.atan2((double) box2DBody.getLinearVelocity().y, (double) box2DBody.getLinearVelocity().x);
+            box2DBody.setTransform(box2DBody.getPosition(), angle);
+
         }
     }
 
