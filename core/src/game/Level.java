@@ -13,8 +13,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import engine.box2d.spawner.BallSpawner;
 import engine.box2d.utils.GameHud;
-import game.entities.*;
-import game.entities.Paddle.Effects;
+import game.entities.Ball;
+import game.entities.GameWalls;
+import game.entities.Paddle;
+import game.entities.Platform;
+import game.entities.SimpleBox2DEntity;
 import game.listeners.B2DContactListener;
 import game.registry.BricksGenerator;
 
@@ -73,7 +76,6 @@ public class Level extends ScreenAdapter {
         gameWalls = new GameWalls(screenWidth, screenHeight, wallSize, atlas, world);
 
         paddle = new Paddle(world, atlas);
-        paddle.addEffect(Effects.Speed);
 
         platforms = new ArrayList<>();
         platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 12, 200, 600));
@@ -126,9 +128,7 @@ public class Level extends ScreenAdapter {
         vecX += Gdx.input.isKeyPressed(Input.Keys.LEFT) ? -1 : 0;
         vecX += Gdx.input.isKeyPressed(Input.Keys.RIGHT) ? 1 : 0;
         paddle.updateSpeed(delta, vecX);
-        Vector2 bodyPos = paddle.getBox2DBody().getPosition();
-        paddle.getBox2DBody().setTransform(bodyPos.add(delta * Paddle.PADDLE_MOVE_SPEED * paddle.getPaddleSpeedVector(), 0), paddle.getBox2DBody().getAngle());
-
+        paddle.move(delta);
     }
 
     private void render(SpriteBatch batch) {
