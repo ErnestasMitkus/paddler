@@ -6,7 +6,7 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = 1300;
         config.height = config.width * 9 / 16;
-        config.foregroundFPS = 0;
+        config.foregroundFPS = 60;
         config.backgroundFPS = 10;
         config.vSyncEnabled = false;
         config.title = "Paddler";

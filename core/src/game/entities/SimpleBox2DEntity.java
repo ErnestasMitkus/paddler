@@ -6,12 +6,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 import engine.box2d.utils.ShapeUtils;
 import game.registry.SpriteRegistry;
 
 import static game.B2DVars.PPM;
-import static game.B2DVars.PPM_MAT;
+import static game.B2DVars.PPM_INV;
 
 public class SimpleBox2DEntity {
 
@@ -25,38 +24,36 @@ public class SimpleBox2DEntity {
         sprite = spriteRegistry.createSprite(atlas);
         setBox2DBody(box2DBody);
         box2DBody.setUserData(this);
+        updateSpriteScale();
     }
 
     public void update(float delta) {
         if (box2DBody != null) {
             // position
-            setSpritePosition(box2DBody.getWorldCenter().cpy().mul(PPM_MAT));
+            setSpritePosition(box2DBody.getPosition());
 
             // size
-            updateSpriteScale();
+            //updateSpriteScale();
 
             // angle
             setSpriteRotation(box2DBody.getAngle());
         }
     }
 
-    private void updateSpriteScale() {
-        box2DBody.getFixtureList().forEach(it -> {
-            Shape shape = it.getShape();
-            if (shape instanceof CircleShape) {
-                setSpriteRadius(shape.getRadius() * PPM);
-            }
-        });
+    public void updateSpriteScale() {
+        sprite.setScale(PPM_INV, PPM_INV);
     }
 
     public void render(SpriteBatch batch) {
         sprite.draw(batch);
+
+
     }
 
     public Vector2 getPosition() {
         return new Vector2(
-            sprite.getX() + sprite.getOriginX(),
-            sprite.getY() + sprite.getOriginY());
+                sprite.getX() + sprite.getOriginX(),
+                sprite.getY() + sprite.getOriginY());
     }
 
     private void setSpritePosition(Vector2 pos) {
