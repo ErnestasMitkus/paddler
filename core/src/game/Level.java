@@ -16,7 +16,6 @@ import engine.box2d.utils.GameHud;
 import game.entities.Ball;
 import game.entities.GameWalls;
 import game.entities.Paddle;
-import game.entities.Paddle.Effects;
 import game.entities.Platform;
 import game.entities.SimpleBox2DEntity;
 import game.listeners.B2DContactListener;
@@ -77,7 +76,6 @@ public class Level extends ScreenAdapter {
         gameWalls = new GameWalls(screenWidth, screenHeight, wallSize, atlas, world);
 
         paddle = new Paddle(world, atlas);
-        paddle.addEffect(Effects.Speed);
 
         platforms = new ArrayList<>();
         platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 12, 200, 600));
@@ -126,24 +124,11 @@ public class Level extends ScreenAdapter {
 
     private void updateInputs(float delta) {
         // Update paddle
-
-        // acceleration:
-        // track acc vector per updates
-        // input adds/subtracts from acc vector
-        // bound it to a max speed
-        // if no input, multiply acc vector by slowdown percentage
-        // if Math.abs(acc vector) is lower than some value and input not pressed -> acc vector = 0
-
-        Vector2 bodyPos = paddle.getBox2DBody().getPosition();
-        float paddleMovSpeed = 10f;
-
         int vecX = 0;
         vecX += Gdx.input.isKeyPressed(Input.Keys.LEFT) ? -1 : 0;
         vecX += Gdx.input.isKeyPressed(Input.Keys.RIGHT) ? 1 : 0;
-
-        if (vecX != 0) {
-            paddle.getBox2DBody().setTransform(bodyPos.add(vecX * delta * paddleMovSpeed, 0), paddle.getBox2DBody().getAngle());
-        }
+        paddle.updateSpeed(delta, vecX);
+        paddle.move(delta);
     }
 
     private void render(SpriteBatch batch) {
@@ -156,10 +141,10 @@ public class Level extends ScreenAdapter {
         batch.end();
 
         b2dr.render(world, cam.combined);
-        hud.addMsg("FPS: "+Gdx.graphics.getFramesPerSecond());
-        hud.addMsg("Lives: "+lives);
-        hud.addMsg("Score: "+score);
-        hud.addMsg("Bodies: "+world.getBodyCount());
+        hud.addMsg("FPS: " + Gdx.graphics.getFramesPerSecond());
+        hud.addMsg("Lives: " + lives);
+        hud.addMsg("Score: " + score);
+        hud.addMsg("Bodies: " + world.getBodyCount());
         hud.draw();
     }
 
