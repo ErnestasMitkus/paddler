@@ -22,7 +22,7 @@ public class BricksGenerator {
         Vector2 platformSize = new Vector2(SpriteRegistry.BLUE_TILE.getSizeX() / 5f, SpriteRegistry.BLUE_TILE.getSizeY() / 5f).mul(PPM_MAT_INV);
         List<Platform> bricksList = new ArrayList<>();
 
-        for(float i = 0; i < columns * platformSize.x; i += platformSize.x) {
+        for (float i = 0; i < columns * platformSize.x; i += platformSize.x) {
             bricksList.add(createPlatform(new Vector2(posX + i, posY), platformSize, world, atlas));
             for (float j = 0; j < rows * platformSize.y; j += platformSize.y) {
                 bricksList.add(createPlatform(new Vector2(posX + i, posY - j), platformSize, world, atlas));

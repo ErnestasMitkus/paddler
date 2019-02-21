@@ -24,14 +24,14 @@ public class GameWalls {
 
     private Body b2dBottomWall;
 
-    public GameWalls(float screenWidth, float screenHeight, float wallSize, TextureAtlas atlas, World world) {
-        generateWalls(screenWidth, screenHeight, wallSize, atlas);
-        //generateBox2DWalls(screenWidth, screenHeight, wallSize, world);
-        generateBox2SWalls2(screenWidth * PPM_INV, screenHeight * PPM_INV, wallSize * PPM_INV, world);
+    public GameWalls(float worldWidth, float worldHeight, float wallSize, TextureAtlas atlas, World world) {
+        generateWalls(worldWidth, worldHeight, wallSize, atlas);
+        generateBox2SWalls(worldWidth, worldHeight, wallSize, world);
     }
 
     public void render(SpriteBatch batch) {
         walls.forEach(it -> it.render(batch));
+
     }
 
     public void update(float delta) {
@@ -40,35 +40,22 @@ public class GameWalls {
         }
     }
 
-    private void generateWalls(float screenWidth, float screenHeight, float wallSize, TextureAtlas atlas) {
+    private void generateWalls(float WorldWidth, float WorldHeight, float wallSize, TextureAtlas atlas) {
         // top walls
-        float topY = screenHeight - wallSize;
-        for (float topX = 0f; topX < screenWidth; topX += wallSize) {
+        float topY = WorldHeight - wallSize;
+        for (float topX = 0f; topX < WorldWidth; topX += wallSize) {
             walls.add(new Wall(topX, topY, wallSize, wallSize, atlas));
-
-            // bottom walls
-            // walls.add(new Wall(topX, 0, wallSize, wallSize, atlas));
         }
 
         // left and right walls
-        float rightX = screenWidth - wallSize;
-        for (float wallY = screenHeight - wallSize; wallY > -wallSize; wallY -= wallSize) {
+        float rightX = WorldWidth - wallSize;
+        for (float wallY = WorldHeight - wallSize; wallY > -wallSize; wallY -= wallSize) {
             walls.add(new Wall(0, wallY, wallSize, wallSize, atlas));
             walls.add(new Wall(rightX, wallY, wallSize, wallSize, atlas));
         }
     }
 
-    private void generateBox2DWalls(float screenWidth, float screenHeight, float wallSize, World world) {
-        WallSpawner.spawnChainWall(world,
-            new Vector2(wallSize * PPM_INV, wallSize * PPM_INV),
-            new Vector2((screenWidth - wallSize) * PPM_INV, wallSize * PPM_INV),
-            new Vector2((screenWidth - wallSize) * PPM_INV, (screenHeight - wallSize) * PPM_INV),
-            new Vector2(wallSize * PPM_INV, (screenHeight - wallSize) * PPM_INV),
-            new Vector2(wallSize * PPM_INV, wallSize * PPM_INV)
-        );
-    }
-
-    private void generateBox2SWalls2(float worldWidth, float worldHeight, float padding, World world) {
+    private void generateBox2SWalls(float worldWidth, float worldHeight, float padding, World world) {
         Array<Vector2> points = new Array<>();
 
         points.add(new Vector2(padding, padding));

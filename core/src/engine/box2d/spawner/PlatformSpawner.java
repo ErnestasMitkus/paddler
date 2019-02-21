@@ -23,8 +23,8 @@ public class PlatformSpawner {
         shape.setAsBox(size.x / 2, size.y / 2);
         fdef.shape = shape;
 
-        Body walls = world.createBody(bdef);
-        walls.createFixture(fdef);
-        return walls;
+        Body platform = world.createBody(bdef);
+        platform.createFixture(fdef);
+        return platform;
     }
 }

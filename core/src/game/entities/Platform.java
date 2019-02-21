@@ -17,7 +17,12 @@ public class Platform extends SimpleBox2DEntity {
     public Platform(Body box2DBody, Vector2 size, TextureAtlas atlas, SpriteRegistry tileColor, SpriteRegistry damagedTileColor) {
         super(box2DBody, tileColor, atlas);
         this.damagedTileRegion = damagedTileColor.findRegion(atlas);
-        sprite.setScale(size.x / sprite.getWidth(), size.y / sprite.getHeight());
+    }
+
+    @Override
+    public void updateSpriteScale() {
+        super.updateSpriteScale();
+        this.sprite.setScale(this.sprite.getScaleX() * 0.2f, this.sprite.getScaleY() * 0.2f);
     }
 
     public void hit(Ball ball) {
