@@ -24,9 +24,9 @@ public class GameWalls {
 
     private Body b2dBottomWall;
 
-    public GameWalls(float WorldWidth, float WorldHeight, float wallSize, TextureAtlas atlas, World world) {
-        generateWalls(WorldWidth, WorldHeight, wallSize, atlas);
-        generateBox2SWalls(WorldWidth, WorldHeight, wallSize, world);
+    public GameWalls(float worldWidth, float worldHeight, float wallSize, TextureAtlas atlas, World world) {
+        generateWalls(worldWidth, worldHeight, wallSize, atlas);
+        generateBox2SWalls(worldWidth, worldHeight, wallSize, world);
     }
 
     public void render(SpriteBatch batch) {

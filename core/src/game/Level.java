@@ -3,12 +3,10 @@ package game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -74,20 +72,20 @@ public class Level extends ScreenAdapter {
     public Level(TextureAtlas atlas) {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
-        float wallSize = (screenWidth / 50f)*PPM_INV;
+        float wallSize = (screenWidth / 50f) * PPM_INV;
         float ballSize = 12f;
 
         world = new World(new Vector2(0, 0f), true);
         b2dr = new Box2DDebugRenderer();
         this.atlas = atlas;
 
-        b2dContactListener = new B2DContactListener();
+        b2dContactListener = new B2DContactListener(this);
         world.setContactListener(b2dContactListener);
 
         batch = new SpriteBatch();
         cam = new OrthographicCamera();
         viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, cam);
-        cam.position.set(cam.viewportWidth/2, cam.viewportHeight/2, 0);
+        cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
         viewport.apply();
 
         gameWalls = new GameWalls(WORLD_WIDTH, WORLD_HEIGHT, wallSize, atlas, world);
@@ -96,7 +94,7 @@ public class Level extends ScreenAdapter {
         paddle.addEffect(Effects.Speed);
 
         platforms = new ArrayList<>();
-        platforms.addAll(BricksGenerator.generateBricksList(this, world, atlas, 3, 12, 200, 600));
+        platforms.addAll(BricksGenerator.generateBricksList(world, atlas, 3, 12, 200, 600));
 
         hud = new GameHud(this, atlas);
 
@@ -109,7 +107,7 @@ public class Level extends ScreenAdapter {
     public void resize(int width, int height) {
         super.resize(width, height);
         viewport.update(width, height);
-        cam.position.set(cam.viewportWidth/2, cam.viewportHeight/2, 0);
+        cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
         hud.resize(width, height);
     }
 
@@ -151,7 +149,7 @@ public class Level extends ScreenAdapter {
         // acceleration:
         // track acc vector per updates
         // input adds/subtracts from acc vector
-        // bound it to a max speed`
+        // bound it to a max speed
         // if no input, multiply acc vector by slowdown percentage
         // if Math.abs(acc vector) is lower than some value and input not pressed -> acc vector = 0
 
@@ -182,13 +180,13 @@ public class Level extends ScreenAdapter {
         platforms.forEach(it -> it.render(batch));
         particleRenderer.render();
         batch.end();
-        if (drawDebugShapes){
+        if (drawDebugShapes) {
             b2dr.render(world, cam.combined);
         }
-        hud.addMsg("FPS: "+Gdx.graphics.getFramesPerSecond());
-        hud.addMsg("Lives: "+lives);
-        hud.addMsg("Score: "+score);
-        hud.addMsg("Bodies: "+world.getBodyCount());
+        hud.addMsg("FPS: " + Gdx.graphics.getFramesPerSecond());
+        hud.addMsg("Lives: " + lives);
+        hud.addMsg("Score: " + score);
+        hud.addMsg("Bodies: " + world.getBodyCount());
         hud.draw();
     }
 
@@ -239,11 +237,11 @@ public class Level extends ScreenAdapter {
         return batch;
     }
 
-    public OrthographicCamera getCamera(){
+    public OrthographicCamera getCamera() {
         return cam;
     }
 
-    public GameHud getHud(){
+    public GameHud getHud() {
         return hud;
     }
 
@@ -251,7 +249,7 @@ public class Level extends ScreenAdapter {
         return ball;
     }
 
-    public CameraShaker getCamShaker(){
+    public CameraShaker getCamShaker() {
         return this.camShaker;
     }
 
